@@ -28,6 +28,12 @@ namespace UserManagementApp.Controllers
                 var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
+                    var user = await userManager.FindByEmailAsync(model.Email);
+                    if(user != null)
+                    {
+                        user.LoginTime = DateTime.Now;
+                        await userManager.UpdateAsync(user);
+                    }
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -51,6 +57,7 @@ namespace UserManagementApp.Controllers
                 Users users = new Users
                 {
                     FullName = model.Name,
+                    Designation = model.Designation,
                     Email = model.Email,
                     UserName = model.Email,
 
@@ -148,5 +155,26 @@ namespace UserManagementApp.Controllers
             await signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+        // Block the user's account
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BlockAccount(string userId)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                // Set LockoutEnd to a future date, e.g., 100 years in the future
+                user.LockoutEnd = DateTimeOffset.UtcNow.AddYears(100); // Block for a very long time
+                await userManager.UpdateAsync(user);
+                TempData["Message"] = "Your account has been blocked. Please contact support to unblock.";
+            }
+            else
+            {
+                TempData["Message"] = "User not found.";
+            }
+
+            return RedirectToAction("Index", "Home");  // Redirect the user after blocking
+        }
     }
 }
+

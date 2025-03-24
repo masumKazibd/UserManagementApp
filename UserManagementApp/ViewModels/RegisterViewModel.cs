@@ -7,7 +7,7 @@ namespace UserManagementApp.ViewModels
         [Required(ErrorMessage ="Name is required.")]
         public string Name { get; set; }
 
-        public string Designation { get; set; } = "N/A";
+        public string Designation { get; set; }
 
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress]
