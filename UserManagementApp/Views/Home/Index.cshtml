@@ -1,8 +1,129 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+    <style>
+        .table-wrapper {
+            margin: 20px;
+        }
+        .last-seen-bar {
+            height: 30px;
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+        }
+        .bar {
+            width: 4px;
+            background-color: #6c757d;
+        }
+        .bar.active {
+            background-color: #0d6efd;
+        }
+        .text-muted-line {
+            text-decoration: line-through;
+            color: #6c757d !important;
+        }
+    </style>
+<body>
+    <div class="container table-wrapper">
+        <div class="row mb-3">
+            <div class="col-md-9 d-flex gap-2">
+                <button class="btn btn-primary">Block</button>
+                <button class="btn btn-outline-primary">🔒</button>
+                <button class="btn btn-outline-danger">🗑️</button>
+            </div>
+            <div class="col-md-3 text-end">
+                <input id="filterInput" type="text" class="form-control" placeholder="Filter by name or email">
+            </div>
+        </div>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+        <table class="table table-bordered table-hover" id="userTable">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Last seen</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox" checked></td>
+                    <td><strong>Clare, Alex</strong><br><span class="text-muted">N/A</span></td>
+                    <td>a_clare42@gmail.com</td>
+                    <td>
+                        <span data-bs-toggle="tooltip" title="March 13, 2025 14:00:00">5 minutes ago</span>
+                        <div class="last-seen-bar">
+                            <div class="bar active" style="height: 10px;"></div>
+                            <div class="bar active" style="height: 14px;"></div>
+                            <div class="bar active" style="height: 12px;"></div>
+                            <div class="bar" style="height: 6px;"></div>
+                            <div class="bar active" style="height: 14px;"></div>
+                            <div class="bar" style="height: 4px;"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td><strong>Morrison, Jim</strong><br><span class="text-muted">CFO, Meta Platforms, Inc.</span></td>
+                    <td>dmtimer9@dealyaari.com</td>
+                    <td>
+                        <span data-bs-toggle="tooltip" title="March 13, 2025 14:05:00">less than a minute ago</span>
+                        <div class="last-seen-bar">
+                            <div class="bar active" style="height: 10px;"></div>
+                            <div class="bar active" style="height: 12px;"></div>
+                            <div class="bar active" style="height: 12px;"></div>
+                            <div class="bar active" style="height: 14px;"></div>
+                            <div class="bar active" style="height: 16px;"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" checked></td>
+                    <td><span class="text-muted-line">Simone, Nina</span><br><span class="text-muted">Regional Manager, Amazon.com, Inc.</span></td>
+                    <td class="text-muted">marishabelin@giftcode-ao.com</td>
+                    <td>
+                        <span data-bs-toggle="tooltip" title="October 12, 2024 15:45:30" class="text-muted">3 weeks ago</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td><strong>Zappa, Frank</strong><br><span class="text-muted">Architect, Meta Platforms, Inc.</span></td>
+                    <td>zappa_f@citybank.com</td>
+                    <td>
+                        <span data-bs-toggle="tooltip" title="March 13, 2025 14:05:00">less than a minute ago</span>
+                        <div class="last-seen-bar">
+                            <div class="bar active" style="height: 8px;"></div>
+                            <div class="bar active" style="height: 10px;"></div>
+                            <div class="bar active" style="height: 14px;"></div>
+                            <div class="bar active" style="height: 12px;"></div>
+                            <div class="bar active" style="height: 16px;"></div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+        const filterInput = document.getElementById("filterInput");
+        const table = document.getElementById("userTable");
+        const rows = table.getElementsByTagName("tr");
+
+        filterInput.addEventListener("keyup", function () {
+            const filter = this.value.toLowerCase();
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName("td");
+                const name = cells[1]?.innerText.toLowerCase();
+                const email = cells[2]?.innerText.toLowerCase();
+                if (name.includes(filter) || email.includes(filter)) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        });
+    </script>
