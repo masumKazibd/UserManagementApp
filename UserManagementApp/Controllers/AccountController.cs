@@ -25,22 +25,31 @@ namespace UserManagementApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
-                if (result.Succeeded)
+                var user = await userManager.FindByEmailAsync(model.Email);
+                if (user != null)
                 {
-                    var user = await userManager.FindByEmailAsync(model.Email);
-                    if(user != null)
+                    if (user.IsBlocked)
                     {
-                        user.LoginTime = DateTime.Now;
-                        await userManager.UpdateAsync(user);
+                        ModelState.AddModelError("", "Your account is blocked. Please contact support.");
+                        return View(model);
                     }
-                    return RedirectToAction("Index", "Home");
+                    var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+                    if (result.Succeeded)
+                    {
+                        if (user != null)
+                        {
+                            user.LoginTime = DateTime.Now;
+                            await userManager.UpdateAsync(user);
+                        }
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Email or password is incorrect.");
+                        return View(model);
+                    }
                 }
-                else
-                {
-                    ModelState.AddModelError("", "Email or password is incorrect.");
-                    return View(model);
-                }
+               
             }
             return View(model);
         }
