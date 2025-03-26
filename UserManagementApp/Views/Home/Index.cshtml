@@ -1,28 +1,9 @@
-﻿@{
+﻿@model List<UserManagementApp.ViewModels.DashboardViewModel>
+@using Humanizer
+@{
     ViewData["Title"] = "Home Page";
 }
-    <style>
-        .table-wrapper {
-            margin: 20px;
-        }
-        .last-seen-bar {
-            height: 30px;
-            display: flex;
-            align-items: flex-end;
-            gap: 2px;
-        }
-        .bar {
-            width: 4px;
-            background-color: #6c757d;
-        }
-        .bar.active {
-            background-color: #0d6efd;
-        }
-        .text-muted-line {
-            text-decoration: line-through;
-            color: #6c757d !important;
-        }
-    </style>
+
     <div class="container table-wrapper">
         <div class="row mb-3">
             <div class="col-md-9 d-flex gap-2">
@@ -43,14 +24,19 @@
                     <th scope="col">Email</th>
                     <th scope="col">Last seen</th>
                 </tr>
+
             </thead>
             <tbody>
+            @foreach (var user in Model)
+            {
                 <tr>
                     <td><input type="checkbox" checked></td>
-                    <td><strong>Clare, Alex</strong><br><span class="text-muted">N/A</span></td>
-                    <td>a_clare42@gmail.com</td>
+                    <td><strong>@user.Name</strong><br><span class="text-muted">@user.Designation</span></td>
+                    <td>@user.Email</td>
                     <td>
-                        <span data-bs-toggle="tooltip" title="March 13, 2025 14:00:00">5 minutes ago</span>
+                        <span data-bs-toggle="tooltip" title="@user.LastLoginTIme.Value.ToString("f")">
+                            @user.LastLoginTIme.Value.Humanize()
+                        </span>
                         <div class="last-seen-bar">
                             <div class="bar active" style="height: 10px;"></div>
                             <div class="bar active" style="height: 14px;"></div>
@@ -61,6 +47,7 @@
                         </div>
                     </td>
                 </tr>
+            }
                 <tr>
                     <td><input type="checkbox"></td>
                     <td><strong>Morrison, Jim</strong><br><span class="text-muted">CFO, Meta Platforms, Inc.</span></td>
