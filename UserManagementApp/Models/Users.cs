@@ -7,6 +7,7 @@ namespace UserManagementApp.Models
         public string FullName { get; set; }
         public string Designation { get; set; }
         public DateTime LoginTime { get; set; }
+        public bool IsBlocked { get; set; }
 
     }
 }

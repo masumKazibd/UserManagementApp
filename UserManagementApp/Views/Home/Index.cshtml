@@ -3,13 +3,13 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-
+<form method="post">
     <div class="container table-wrapper">
         <div class="row mb-3">
             <div class="col-md-9 d-flex gap-2">
-                <button class="btn btn-primary">Block</button>
-                <button class="btn btn-outline-primary">🔒</button>
-                <button class="btn btn-outline-danger">🗑️</button>
+                <button type="submit" class="btn btn-primary" formaction="@Url.Action("BlockUsers", "Home")">Block</button>
+                <button type="submit" class="btn btn-outline-primary" formaction="@Url.Action("UnBlockUsers", "Home")">Unblock</button>
+                <button type="button" class="btn btn-outline-danger">Delete</button>
             </div>
             <div class="col-md-3 text-end">
                 <input id="filterInput" type="text" class="form-control" placeholder="Filter by name or email">
@@ -19,7 +19,7 @@
         <table class="table table-bordered table-hover" id="userTable">
             <thead class="table-light">
                 <tr>
-                    <th scope="col"></th>
+                    <th scope="col"><input type="checkbox" id="selectAll"></th>
                     <th scope="col">Name</th>
                     <th scope="col">Email</th>
                     <th scope="col">Last seen</th>
@@ -29,66 +29,56 @@
             <tbody>
             @foreach (var user in Model)
             {
-                <tr>
-                    <td><input type="checkbox" checked></td>
-                    <td><strong>@user.Name</strong><br><span class="text-muted">@user.Designation</span></td>
-                    <td>@user.Email</td>
-                    <td>
-                        <span data-bs-toggle="tooltip" title="@user.LastLoginTIme.Value.ToString("f")">
-                            @user.LastLoginTIme.Value.Humanize()
-                        </span>
-                        <div class="last-seen-bar">
-                            <div class="bar active" style="height: 10px;"></div>
-                            <div class="bar active" style="height: 14px;"></div>
-                            <div class="bar active" style="height: 12px;"></div>
-                            <div class="bar" style="height: 6px;"></div>
-                            <div class="bar active" style="height: 14px;"></div>
-                            <div class="bar" style="height: 4px;"></div>
-                        </div>
-                    </td>
-                </tr>
+                    @if (user.IsBlocked==false)
+                    {
+                        <tr>
+                            <td><input type="checkbox" name="userIds" value="@user.Email"></td>
+                            <td><strong>@user.Name</strong><br><span class="text-muted">@user.Designation</span></td>
+                            <td>@user.Email</td>
+                            <td>
+                                <span data-bs-toggle="tooltip" title="@user.LastLoginTIme.Value.ToString("f")">
+                                    @user.LastLoginTIme.Value.Humanize()
+                                </span>
+                                <div class="last-seen-bar">
+                                    <div class="bar active" style="height: 10px;"></div>
+                                    <div class="bar active" style="height: 14px;"></div>
+                                    <div class="bar active" style="height: 12px;"></div>
+                                    <div class="bar" style="height: 6px;"></div>
+                                    <div class="bar active" style="height: 14px;"></div>
+                                    <div class="bar" style="height: 4px;"></div>
+                                </div>
+                            </td>
+                        </tr>
+
+
+
+
+
+
+
+
+
+                    }
+                    else
+                    {
+                        <tr>
+                            <td><input type="checkbox" name="userIds" value="@user.Email"></td>
+                            <td><span class="text-muted-line">@user.Name</span><br><span class="text-muted">@user.Designation</span></td>
+                            <td class="text-muted">@user.Email</td>
+                            <td>
+                                <span data-bs-toggle="tooltip" title="@user.LastLoginTIme.Value.ToString("f")">
+                                    @user.LastLoginTIme.Value.Humanize()
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                    
             }
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td><strong>Morrison, Jim</strong><br><span class="text-muted">CFO, Meta Platforms, Inc.</span></td>
-                    <td>dmtimer9@dealyaari.com</td>
-                    <td>
-                        <span data-bs-toggle="tooltip" title="March 13, 2025 14:05:00">less than a minute ago</span>
-                        <div class="last-seen-bar">
-                            <div class="bar active" style="height: 10px;"></div>
-                            <div class="bar active" style="height: 12px;"></div>
-                            <div class="bar active" style="height: 12px;"></div>
-                            <div class="bar active" style="height: 14px;"></div>
-                            <div class="bar active" style="height: 16px;"></div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" checked></td>
-                    <td><span class="text-muted-line">Simone, Nina</span><br><span class="text-muted">Regional Manager, Amazon.com, Inc.</span></td>
-                    <td class="text-muted">marishabelin@giftcode-ao.com</td>
-                    <td>
-                        <span data-bs-toggle="tooltip" title="October 12, 2024 15:45:30" class="text-muted">3 weeks ago</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td><strong>Zappa, Frank</strong><br><span class="text-muted">Architect, Meta Platforms, Inc.</span></td>
-                    <td>zappa_f@citybank.com</td>
-                    <td>
-                        <span data-bs-toggle="tooltip" title="March 13, 2025 14:05:00">less than a minute ago</span>
-                        <div class="last-seen-bar">
-                            <div class="bar active" style="height: 8px;"></div>
-                            <div class="bar active" style="height: 10px;"></div>
-                            <div class="bar active" style="height: 14px;"></div>
-                            <div class="bar active" style="height: 12px;"></div>
-                            <div class="bar active" style="height: 16px;"></div>
-                        </div>
-                    </td>
-                </tr>
             </tbody>
         </table>
     </div>
+
+</form>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -112,4 +102,12 @@
                 }
             }
         });
+    // Select all checkboxes
+    const selectAllCheckbox = document.getElementById("selectAll");
+    selectAllCheckbox.addEventListener("change", function () {
+        const checkboxes = document.querySelectorAll('input[name="userIds"]');
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+    });
     </script>
