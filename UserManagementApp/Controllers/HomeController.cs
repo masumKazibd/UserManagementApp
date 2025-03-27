@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,13 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly UserManager<Users> _userManager;
+    private readonly SignInManager<Users> _signInManager;
 
-    public HomeController(ILogger<HomeController> logger, UserManager<Users> userManager)
+    public HomeController(ILogger<HomeController> logger, UserManager<Users> userManager, SignInManager<Users> signInManager)
     {
         _logger = logger;
         _userManager = userManager;
+        _signInManager = signInManager;
     }
     [Authorize]
     public async Task<IActionResult> Index()
@@ -44,12 +47,12 @@ public class HomeController : Controller
         {
             return BadRequest("No users selected.");
         }
-        _logger.LogInformation("User IDs to block: " + string.Join(", ", userIds));
-
+ 
         var usersToBlock = await _userManager.Users
             .Where(user => userIds.Contains(user.Email))
             .ToListAsync();
         _logger.LogInformation("Users found to block: " + usersToBlock.Count);
+        var currentUserEmail = User.FindFirstValue(ClaimTypes.Email);
 
         foreach (var user in usersToBlock)
         {
@@ -57,6 +60,11 @@ public class HomeController : Controller
             user.IsBlocked = true;
             user.LockoutEnabled = true;
             await _userManager.UpdateAsync(user);
+            if (user.Email.Equals(currentUserEmail, StringComparison.OrdinalIgnoreCase))
+            {
+                await _signInManager.SignOutAsync();
+                _logger.LogInformation("Current user has been blocked and logged out.");
+            }
         }
         return RedirectToAction(nameof(Index));
     }

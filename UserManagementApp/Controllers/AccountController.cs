@@ -49,7 +49,11 @@ namespace UserManagementApp.Controllers
                         return View(model);
                     }
                 }
-               
+                else
+                {
+                    ModelState.AddModelError("", "Email does not exist.");
+                }
+
             }
             return View(model);
         }
@@ -159,30 +163,10 @@ namespace UserManagementApp.Controllers
                 return View(model);
             }
         }
-                    public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
-        }
-        // Block the user's account
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> BlockAccount(string userId)
-        {
-            var user = await userManager.FindByIdAsync(userId);
-            if (user != null)
-            {
-                // Set LockoutEnd to a future date, e.g., 100 years in the future
-                user.LockoutEnd = DateTimeOffset.UtcNow.AddYears(100); // Block for a very long time
-                await userManager.UpdateAsync(user);
-                TempData["Message"] = "Your account has been blocked. Please contact support to unblock.";
-            }
-            else
-            {
-                TempData["Message"] = "User not found.";
-            }
-
-            return RedirectToAction("Index", "Home");  // Redirect the user after blocking
         }
     }
 }
