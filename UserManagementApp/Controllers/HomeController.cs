@@ -35,8 +35,10 @@ public class HomeController : Controller
             LastLoginTIme = user.LoginTime,
             LockoutEnd = user.LockoutEnd,
             IsBlocked = user.IsBlocked
-        }).ToList();
-
+        })
+            .OrderByDescending(vm => vm.LastLoginTIme)
+            .ToList();
+        //sort by lastlogin desending
         return View(model);
     }
     [HttpPost]
@@ -63,7 +65,6 @@ public class HomeController : Controller
             if (user.Email.Equals(currentUserEmail, StringComparison.OrdinalIgnoreCase))
             {
                 await _signInManager.SignOutAsync();
-                _logger.LogInformation("Current user has been blocked and logged out.");
             }
         }
         return RedirectToAction(nameof(Index));
