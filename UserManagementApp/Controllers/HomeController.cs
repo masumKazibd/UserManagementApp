@@ -53,7 +53,6 @@ public class HomeController : Controller
         var usersToBlock = await _userManager.Users
             .Where(user => userIds.Contains(user.Email))
             .ToListAsync();
-        _logger.LogInformation("Users found to block: " + usersToBlock.Count);
         var currentUserEmail = User.FindFirstValue(ClaimTypes.Email);
 
         foreach (var user in usersToBlock)
@@ -82,7 +81,6 @@ public class HomeController : Controller
         var usersToUnBlock = await _userManager.Users
             .Where(user => userIds.Contains(user.Email))
             .ToListAsync();
-        _logger.LogInformation("Users found to block: " + usersToUnBlock.Count);
 
         foreach (var user in usersToUnBlock)
         {
@@ -94,7 +92,36 @@ public class HomeController : Controller
         TempData["SuccessMessage"] = $"{usersToUnBlock.Count} user(s) unblocked successfully.";
         return RedirectToAction(nameof(Index));
     }
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> DeleteUsers(List<string> userIds)
+    {
+        if (userIds == null || !userIds.Any())
+        {
+            return BadRequest("No users selected.");
+        }
 
+        var usersToDelete = await _userManager.Users
+            .Where(user => userIds.Contains(user.Email))
+            .ToListAsync();
+        var currentUserEmail = User.FindFirstValue(ClaimTypes.Email);
+
+        foreach (var user in usersToDelete)
+        {
+            var result = await _userManager.DeleteAsync(user);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest($"Failed to delete user: {user.Email}");
+            }
+            if (user.Email.Equals(currentUserEmail, StringComparison.OrdinalIgnoreCase))
+            {
+                await _signInManager.SignOutAsync();
+            }
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
     public IActionResult Privacy()
     {
         return View();

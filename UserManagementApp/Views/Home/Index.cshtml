@@ -9,7 +9,7 @@
             <div class="col-md-9 d-flex gap-2">
                 <button type="submit" class="btn btn-primary" formaction="@Url.Action("BlockUsers", "Home")">Block</button>
                 <button type="submit" class="btn btn-outline-primary" formaction="@Url.Action("UnBlockUsers", "Home")">Unblock</button>
-                <button type="button" class="btn btn-outline-danger">Delete</button>
+                <button type="submit" class="btn btn-outline-danger" formaction="@Url.Action("DeleteUsers", "Home")"> Delete</button>
             </div>
             <div class="col-md-3 text-end">
                 <input id="filterInput" type="text" class="form-control" placeholder="Filter by name or email">
