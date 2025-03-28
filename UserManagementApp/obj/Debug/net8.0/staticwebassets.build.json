@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "AE9jdx3z0M5xCaP+pVzWXWZPZ3y0O+YXJ8M2Rs/cbRg=",
+  "Hash": "dfJx1qeMsnfefEApXhluizms3DkHIlfcybINFTqQHII=",
   "Source": "UserManagementApp",
   "BasePath": "_content/UserManagementApp",
   "Mode": "Default",
@@ -110,6 +110,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "D:\\itransition\\Task 4\\UserManagementApp\\UserManagementApp\\wwwroot\\images\\account-bg.jpg",
+      "SourceId": "UserManagementApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\itransition\\Task 4\\UserManagementApp\\UserManagementApp\\wwwroot\\",
+      "BasePath": "_content/UserManagementApp",
+      "RelativePath": "images/account-bg.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\account-bg.jpg"
     },
     {
       "Identity": "D:\\itransition\\Task 4\\UserManagementApp\\UserManagementApp\\wwwroot\\js\\site.js",

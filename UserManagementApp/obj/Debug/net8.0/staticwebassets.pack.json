@@ -17,6 +17,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "D:\\itransition\\Task 4\\UserManagementApp\\UserManagementApp\\wwwroot\\images\\account-bg.jpg",
+      "PackagePath": "staticwebassets\\images\\account-bg.jpg"
+    },
+    {
       "Id": "D:\\itransition\\Task 4\\UserManagementApp\\UserManagementApp\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },
