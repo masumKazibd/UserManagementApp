@@ -38,7 +38,6 @@ public class HomeController : Controller
         })
             .OrderByDescending(vm => vm.LastLoginTIme)
             .ToList();
-        //sort by lastlogin desending
         return View(model);
     }
     [HttpPost]
@@ -47,7 +46,9 @@ public class HomeController : Controller
     {
         if(userIds == null || !userIds.Any())
         {
-            return BadRequest("No users selected.");
+            TempData["AlertMessage"] = "No users selected.";
+            TempData["AlertType"] = "danger";
+            return RedirectToAction(nameof(Index));
         }
  
         var usersToBlock = await _userManager.Users
@@ -66,6 +67,9 @@ public class HomeController : Controller
                 await _signInManager.SignOutAsync();
             }
         }
+
+        TempData["AlertMessage"] = $"{usersToBlock.Count} user(s) blocked successfully.";
+        TempData["AlertType"] = "success";
         return RedirectToAction(nameof(Index));
     }
     [HttpPost]
@@ -74,9 +78,10 @@ public class HomeController : Controller
     {
         if (userIds == null || !userIds.Any())
         {
-            return BadRequest("No users selected.");
+            TempData["AlertMessage"] = "No users selected.";
+            TempData["AlertType"] = "danger";
+            return RedirectToAction(nameof(Index));
         }
-        _logger.LogInformation("User IDs to block: " + string.Join(", ", userIds));
 
         var usersToUnBlock = await _userManager.Users
             .Where(user => userIds.Contains(user.Email))
@@ -89,7 +94,8 @@ public class HomeController : Controller
             user.LockoutEnabled = true;
             await _userManager.UpdateAsync(user);
         }
-        TempData["SuccessMessage"] = $"{usersToUnBlock.Count} user(s) unblocked successfully.";
+        TempData["AlertMessage"] = $"{usersToUnBlock.Count} user(s) unblocked successfully.";
+        TempData["AlertType"] = "success";
         return RedirectToAction(nameof(Index));
     }
     [HttpPost]
@@ -98,7 +104,9 @@ public class HomeController : Controller
     {
         if (userIds == null || !userIds.Any())
         {
-            return BadRequest("No users selected.");
+            TempData["AlertMessage"] = "No users selected.";
+            TempData["AlertType"] = "danger";
+            return RedirectToAction(nameof(Index));
         }
 
         var usersToDelete = await _userManager.Users
@@ -112,14 +120,19 @@ public class HomeController : Controller
 
             if (!result.Succeeded)
             {
-                return BadRequest($"Failed to delete user: {user.Email}");
+
+                TempData["AlertMessage"] = "Failed to delete users";
+                TempData["AlertType"] = "danger";
+                return RedirectToAction(nameof(Index));
             }
             if (user.Email.Equals(currentUserEmail, StringComparison.OrdinalIgnoreCase))
             {
                 await _signInManager.SignOutAsync();
             }
         }
-
+        TempData["AlertMessage"] = "User(s) delted successfully.";
+        TempData["AlertType"] = "success";
+        return RedirectToAction(nameof(Index));
         return RedirectToAction(nameof(Index));
     }
     public IActionResult Privacy()
